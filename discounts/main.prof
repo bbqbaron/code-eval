@@ -1,0 +1,113 @@
+	Sun Nov 22 13:20 2015 Time and Allocation Profiling Report  (Final)
+
+	   main +RTS -p -RTS input.txt
+
+	total time  =        2.47 secs   (2470 ticks @ 1000 us, 1 processor)
+	total alloc = 517,256,464 bytes  (excludes profiling overheads)
+
+COST CENTRE          MODULE  %time %alloc
+
+commonFactors.(...)  Main     42.8   29.9
+evenLength           Main     29.9   27.4
+nameVowelScore       Main     15.4   23.8
+nameConsScore        Main      6.2    7.5
+commonFactors        Main      1.4    0.3
+factors              Main      0.6    5.9
+commonFactors.common Main      0.2    1.8
+
+
+                                                                                    individual     inherited
+COST CENTRE                             MODULE                    no.     entries  %time %alloc   %time %alloc
+
+MAIN                                    MAIN                       59           0    0.0    0.0   100.0  100.0
+ main                                   Main                      119           0    0.0    0.0   100.0  100.0
+  handle                                Main                      123           3    0.0    0.0   100.0  100.0
+   handle.items                         Main                      139           3    0.0    0.0     0.0    0.0
+   handle.(...)                         Main                      131           3    0.0    0.0     0.0    0.0
+    splitOn                             Main                      134           9    0.0    0.0     0.0    0.0
+     splitOn'                           Main                      135         996    0.0    0.0     0.0    0.0
+      splitOn'.hit                      Main                      136         987    0.0    0.0     0.0    0.0
+    compress                            Main                      133           0    0.0    0.0     0.0    0.0
+   handle.customers                     Main                      130           3    0.0    0.0     0.0    0.0
+   highestCombo                         Main                      124           3    0.0    0.0   100.0   99.9
+    highestCombo.s                      Main                      145           3    0.0    0.0    99.9   98.8
+     highestCombo.s.\                   Main                      146        5763    0.0    0.0    99.9   98.7
+      scoreSet                          Main                      147           0    0.7    1.0    99.9   98.7
+       scoreSet.\                       Main                      150       69126    0.6    0.6    99.1   97.8
+        score                           Main                      151       69126    0.6    0.0    98.5   97.1
+         score.multiplier               Main                      159       69126    0.4    0.0    46.3   38.4
+          commonFactors                 Main                      160       69126    1.4    0.3    45.9   38.4
+           commonFactors.hasAny         Main                      176       69126    0.1    0.5     0.1    0.5
+           commonFactors.l2             Main                      175       69126    0.0    0.0     0.0    0.0
+           commonFactors.f2             Main                      174       69126    0.0    0.0     0.0    0.0
+           commonFactors.common         Main                      173       69126    0.2    1.8     0.2    1.8
+           commonFactors.(...)          Main                      170       69126    0.1    0.0     1.4    5.9
+            factors                     Main                      171      138252    0.6    5.9     1.3    5.9
+             factors.\                  Main                      172     1009029    0.7    0.0     0.7    0.0
+           commonFactors.(...)          Main                      163       69126   42.8   29.9    42.8   29.9
+           commonFactors.l1             Main                      162       69126    0.0    0.0     0.0    0.0
+           commonFactors.f1             Main                      161       69126    0.0    0.0     0.0    0.0
+         score.baseScore                Main                      152       69126    0.2    0.0    51.7   58.7
+          nameConsScore                 Main                      178           0    6.2    7.5     6.2    7.5
+          nameVowelScore                Main                      157           0   15.4   23.8    15.4   23.8
+          evenLength                    Main                      154           0   29.9   27.4    29.9   27.4
+    highestCombo.choiceSets             Main                      127           3    0.0    0.0     0.1    1.1
+     uniqueChoiceSets                   Main                      128           3    0.0    0.1     0.1    1.1
+      uniqueChoiceSets.reorder          Main                      149           3    0.0    0.0     0.0    0.0
+      uniqueChoiceSets.\                Main                      144           9    0.0    0.2     0.1    1.1
+       uniqueChoiceSets.\.\             Main                      148        5766    0.1    0.9     0.1    0.9
+      uniqueChoiceSets.choices          Main                      142           3    0.0    0.0     0.0    0.0
+       choose                           Main                      143           3    0.0    0.0     0.0    0.0
+        choose'                         Main                      199         253    0.0    0.0     0.0    0.0
+         choose'.h                      Main                      202          27    0.0    0.0     0.0    0.0
+         choose'.t                      Main                      201         126    0.0    0.0     0.0    0.0
+         choose'.picked                 Main                      200         126    0.0    0.0     0.0    0.0
+      uniqueChoiceSets.longest          Main                      141           3    0.0    0.0     0.0    0.0
+      uniqueChoiceSets.shortest         Main                      140           3    0.0    0.0     0.0    0.0
+      uniqueChoiceSets.customerShortest Main                      129           3    0.0    0.0     0.0    0.0
+    scoreSet                            Main                      126           0    0.0    0.0     0.0    0.0
+     scoreSet.\                         Main                      179          15    0.0    0.0     0.0    0.0
+      score                             Main                      180          15    0.0    0.0     0.0    0.0
+       score.multiplier                 Main                      184          15    0.0    0.0     0.0    0.0
+        commonFactors                   Main                      185          15    0.0    0.0     0.0    0.0
+         commonFactors.hasAny           Main                      195          15    0.0    0.0     0.0    0.0
+         commonFactors.l2               Main                      194          15    0.0    0.0     0.0    0.0
+         commonFactors.f2               Main                      193          15    0.0    0.0     0.0    0.0
+         commonFactors.common           Main                      192          15    0.0    0.0     0.0    0.0
+         commonFactors.(...)            Main                      189          15    0.0    0.0     0.0    0.0
+          factors                       Main                      190          30    0.0    0.0     0.0    0.0
+           factors.\                    Main                      191         224    0.0    0.0     0.0    0.0
+         commonFactors.(...)            Main                      188          15    0.0    0.0     0.0    0.0
+         commonFactors.l1               Main                      187          15    0.0    0.0     0.0    0.0
+         commonFactors.f1               Main                      186          15    0.0    0.0     0.0    0.0
+       score.baseScore                  Main                      181          15    0.0    0.0     0.0    0.0
+        nameConsScore                   Main                      196           0    0.0    0.0     0.0    0.0
+        nameVowelScore                  Main                      183           0    0.0    0.0     0.0    0.0
+        evenLength                      Main                      182           0    0.0    0.0     0.0    0.0
+ CAF:main1                              Main                      116           0    0.0    0.0     0.0    0.0
+  main                                  Main                      118           1    0.0    0.0     0.0    0.0
+ CAF:f_r9am                             Main                      115           0    0.0    0.0     0.0    0.0
+  main                                  Main                      120           0    0.0    0.0     0.0    0.0
+   pretty                               Main                      121           1    0.0    0.0     0.0    0.0
+ CAF:scoreSet_r3ku                      Main                      111           0    0.0    0.0     0.0    0.0
+  scoreSet                              Main                      125           1    0.0    0.0     0.0    0.0
+ CAF:evenLength_r3gQ                    Main                      109           0    0.0    0.0     0.0    0.0
+  evenLength                            Main                      153           1    0.0    0.0     0.0    0.0
+ CAF:nameConsScore_r3kn                 Main                      108           0    0.0    0.0     0.0    0.0
+  nameConsScore                         Main                      177           1    0.0    0.0     0.0    0.0
+ CAF:nameVowelScore_r3km                Main                      107           0    0.0    0.0     0.0    0.0
+  nameVowelScore                        Main                      156           1    0.0    0.0     0.0    0.0
+ CAF:compress_r3ko                      Main                      106           0    0.0    0.0     0.0    0.0
+  compress                              Main                      132           1    0.0    0.0     0.0    0.0
+ CAF:vowels_r3kk                        Main                      105           0    0.0    0.0     0.0    0.0
+  vowels                                Main                      158           1    0.0    0.0     0.0    0.0
+ CAF:letters_r3kl                       Main                      104           0    0.0    0.0     0.0    0.0
+  letters                               Main                      155           1    0.0    0.0     0.0    0.0
+ CAF                                    GHC.Conc.Signal           100           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.Float                  95           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.Encoding            93           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.Encoding.Iconv      91           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.FD                  85           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.Handle.FD           83           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.Handle.Internals    82           0    0.0    0.0     0.0    0.0
+ CAF                                    GHC.IO.Handle.Text         81           0    0.0    0.0     0.0    0.0
