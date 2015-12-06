@@ -7,49 +7,43 @@ withSplit :: ([Float] -> Float) -> [Float] -> Float
 withSplit fn l =
   let l1 = take 1000 l
       l2 = take 1000 $ drop 1000 l
-  in ((fn l1) - (fn l2)) / 2000
+  in ((fn l2) - (fn l1))
 
-slope :: [Float] -> Float
-slope = withSplit $ ((flip (/) 1000) . sum)
+slopeOf :: [Float] -> Float
+slopeOf = withSplit ((flip (/) 1000) . sum)
 
-ampSlope :: [Float] -> Float
-ampSlope = withSplit $ (\l -> (maximum l) - (minimum l))
-
-zeroPoint :: [Float] -> Float
-zeroPoint = (flip (/) 2000) . sum
-
-amplitude :: [Float] -> Float
-amplitude l = (maximum l) - (minimum l)
+zeroPointOf :: [Float] -> Float
+zeroPointOf = (flip (/) 2000) . sum
 
 pointAt :: Float -> Float -> Float -> Float
-pointAt origin slope x = origin + (slope * x / 2000)
+pointAt center slope x =
+  let dy = (x - 1000) * slope / 1000
+  in  center + dy
 
 data State = State {
   x :: Float,
-  lastY :: Float,
-  crossings :: Float
+  peaks :: Float,
+  inPeak :: Bool
 }
 
-freq :: [Float] -> Float
+tag :: (Show a) => String -> a -> a
+tag s a = trace (s ++ (show a)) a
+
+freq :: [Float] -> Int
 freq l =
-  let zp = zeroPoint l
-      a = amplitude l
-      dzp = slope l
-      da = ampSlope l
+  let zeroPoint = tag "zp: " $ zeroPointOf l
+      slope = tag "slope: " $ slopeOf l
       freq' :: State -> Float -> State
-      freq' (State {x=x, lastY=y', crossings=xs}) y =
-        let currentZero = pointAt zp dzp x
-            currentAmp = pointAt a da x
-            threshold = currentAmp / 10
-            ascending = y' <= 0
-            gap = y - currentZero
-            crossed = if ascending then gap > threshold else gap < (threshold * (-1))
-        in State {
-              x = x+1,
-              lastY = if crossed then gap else y',
-              crossings = xs + (if crossed then 1 else 0)
-            }
-  in crossings $ foldl freq' (State {x=0, lastY=0, crossings=0}) l
+      freq' s y =
+        let threshold = pointAt zeroPoint slope $ x s
+            inPlay = y > threshold
+            inside = inPeak s
+            x' = 1 + (x s)
+            gone = inside && not inPlay
+            peaks' = (peaks s) + (if gone then trace ("leaving at: " ++ (show y)) 1 else 0)
+            inPeak' = inPlay
+        in  State {x = x', peaks = peaks', inPeak = inPeak'}
+  in  truncate . ((*) 10) . peaks $ foldl freq' (State {x = 0, peaks = 0, inPeak = False}) l
 
 pretty :: (Show a) => a -> String
 pretty = filter ((/=) '"') . show
