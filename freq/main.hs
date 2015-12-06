@@ -3,32 +3,59 @@ import System.Environment (getArgs)
 
 import Debug.Trace
 
-data Dir = Up | Down
+withSplit :: ([Float] -> Float) -> [Float] -> Float
+withSplit fn l =
+  let l1 = take 1000 l
+      l2 = take 1000 $ drop 1000 l
+  in ((fn l1) - (fn l2)) / 2000
 
-f :: Int -> Int -> Int -> Dir -> [Int] -> Int
-f ps _ _ _ [] = ps * 10
-f ps _ _ Down [i] = ps * 10
-f ps _ l Up [i]
-  | i < l = (ps + 1) * 10
-  | otherwise = ps * 10
-f ps lp l Up [i, i2]
-  | i < l = f (ps + 1) l i Down [i2]
-  | otherwise = f ps lp i Up [i2]
-f ps lastPeak l Down [i, i2]
-  | i > l && (abs (lastPeak - l) >= 20) = f ps lastPeak i Up [i2]
-  | otherwise = f ps lastPeak i Down [i2]
-f ps lp l Up (h:t)
-  | h < l = f (ps + 1) l h Down t
-  | otherwise = f ps lp h Up t
-f ps lastPeak l Down (h:t)
-  | h > l && (abs (lastPeak - l) >= 20) = f ps lastPeak h Up t
-  | otherwise = f ps lastPeak h Down t
+slope :: [Float] -> Float
+slope = withSplit $ ((flip (/) 1000) . sum)
+
+ampSlope :: [Float] -> Float
+ampSlope = withSplit $ (\l -> (maximum l) - (minimum l))
+
+zeroPoint :: [Float] -> Float
+zeroPoint = (flip (/) 2000) . sum
+
+amplitude :: [Float] -> Float
+amplitude l = (maximum l) - (minimum l)
+
+pointAt :: Float -> Float -> Float -> Float
+pointAt origin slope x = origin + (slope * x / 2000)
+
+data State = State {
+  x :: Float,
+  lastY :: Float,
+  crossings :: Float
+}
+
+freq :: [Float] -> Float
+freq l =
+  let zp = zeroPoint l
+      a = amplitude l
+      dzp = slope l
+      da = ampSlope l
+      freq' :: State -> Float -> State
+      freq' (State {x=x, lastY=y', crossings=xs}) y =
+        let currentZero = pointAt zp dzp x
+            currentAmp = pointAt a da x
+            threshold = currentAmp / 10
+            ascending = y' <= 0
+            gap = y - currentZero
+            crossed = if ascending then gap > threshold else gap < (threshold * (-1))
+        in State {
+              x = x+1,
+              lastY = if crossed then gap else y',
+              crossings = xs + (if crossed then 1 else 0)
+            }
+  in crossings $ foldl freq' (State {x=0, lastY=0, crossings=0}) l
 
 pretty :: (Show a) => a -> String
 pretty = filter ((/=) '"') . show
 
 handle :: String -> String
-handle = pretty . (f 0 0 0 Down) . (map read) . words
+handle = pretty . freq . (map read) . words
 
 main :: IO ()
 main = do
