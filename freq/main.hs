@@ -43,7 +43,8 @@ freq l =
             peaks' = (peaks s) + (if gone then trace ("leaving at: " ++ (show y)) 1 else 0)
             inPeak' = inPlay
         in  State {x = x', peaks = peaks', inPeak = inPeak'}
-  in  truncate . ((*) 10) . peaks $ foldl freq' (State {x = 0, peaks = 0, inPeak = False}) l
+      final = foldl freq' (State {x = 0, peaks = 0, inPeak = False}) l
+  in  truncate $ (*) 10 $ peaks final
 
 pretty :: (Show a) => a -> String
 pretty = filter ((/=) '"') . show
