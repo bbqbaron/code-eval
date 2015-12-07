@@ -23,7 +23,10 @@ pointAt center slope x =
 data State = State {
   x :: Float,
   peaks :: Float,
-  inPeak :: Bool
+  inPeak :: Float,
+  startedInPeak :: Maybe Bool,
+  beganCompletePeak :: Bool,
+  partialInPlays :: Float
 }
 
 tag :: (Show a) => String -> a -> a
@@ -37,14 +40,23 @@ freq l =
       freq' s y =
         let threshold = pointAt zeroPoint slope $ x s
             inPlay = y > threshold
-            inside = inPeak s
+            inside = (inPeak s) > 0
             x' = 1 + (x s)
             gone = inside && not inPlay
             peaks' = (peaks s) + (if gone then trace ("leaving at: " ++ (show y)) 1 else 0)
-            inPeak' = inPlay
-        in  State {x = x', peaks = peaks', inPeak = inPeak'}
-      final = foldl freq' (State {x = 0, peaks = 0, inPeak = False}) l
-  in  truncate $ (*) 10 $ peaks final
+            inPeak' = if gone then 0 else (inPeak s) + (if inPlay then 1 else 0)
+            beganCompletePeak' = if beganCompletePeak s then True else inPlay && (not inside)
+            startedInPeak' = case startedInPeak s of
+              Nothing -> Just inPlay
+              Just b -> Just b
+            partialInPlays' = if beganCompletePeak' then partialInPlays s else inPeak'
+        in  State {x = x', peaks = peaks', inPeak = inPeak', startedInPeak = startedInPeak', beganCompletePeak = beganCompletePeak', partialInPlays = partialInPlays'}
+      final = foldl freq' (State {x = 0, peaks = 0, inPeak = 0, startedInPeak = Nothing, beganCompletePeak = False, partialInPlays = 0}) l
+      partials = tag "partials: " $ (tag "final: " $ inPeak final) + (tag "start: " $ partialInPlays final)
+      waveLength = tag "wavelength: " $ 2000 / (peaks final)
+      roundUp = tag "round up: " $ partials > waveLength / 2
+      peaks' = peaks final + if roundUp then 1 else 0
+  in  truncate $ (*) 10 $ peaks'
 
 pretty :: (Show a) => a -> String
 pretty = filter ((/=) '"') . show
