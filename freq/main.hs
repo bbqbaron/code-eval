@@ -37,19 +37,19 @@ freq l =
   let zeroPoint = tag "zp: " $ zeroPointOf l
       slope = tag "slope: " $ slopeOf l
       freq' :: State -> Float -> State
-      freq' s y =
-        let threshold = pointAt zeroPoint slope $ x s
+      freq' state y =
+        let threshold = pointAt zeroPoint slope $ x state
             inPlay = y > threshold
-            inside = (inPeak s) > 0
-            x' = 1 + (x s)
+            inside = (inPeak state) > 0
+            x' = 1 + (x state)
             gone = inside && not inPlay
-            peaks' = (peaks s) + (if gone then trace ("leaving at: " ++ (show y)) 1 else 0)
-            inPeak' = if gone then 0 else (inPeak s) + (if inPlay then 1 else 0)
-            beganCompletePeak' = if beganCompletePeak s then True else inPlay && (not inside)
-            startedInPeak' = case startedInPeak s of
+            peaks' = (peaks state) + (if gone then trace ("leaving at: " ++ (show y)) 1 else 0)
+            inPeak' = if gone then 0 else (inPeak state) + (if inPlay then 1 else 0)
+            beganCompletePeak' = if beganCompletePeak state then True else inPlay && (not inside)
+            startedInPeak' = case startedInPeak state of
               Nothing -> Just inPlay
               Just b -> Just b
-            partialInPlays' = if beganCompletePeak' then partialInPlays s else inPeak'
+            partialInPlays' = if beganCompletePeak' then partialInPlays state else inPeak'
         in  State {x = x', peaks = peaks', inPeak = inPeak', startedInPeak = startedInPeak', beganCompletePeak = beganCompletePeak', partialInPlays = partialInPlays'}
       final = foldl freq' (State {x = 0, peaks = 0, inPeak = 0, startedInPeak = Nothing, beganCompletePeak = False, partialInPlays = 0}) l
       partials = tag "partials: " $ (tag "final: " $ inPeak final) + (tag "start: " $ partialInPlays final)

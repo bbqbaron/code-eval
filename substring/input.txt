@@ -1,0 +1,16 @@
+Hello,ell
+This is good, is
+CodeEval,C*Eval
+Old,Young
+ALKAJSDLKAS,*
+ALAFASD,\*
+FooBar,Foo*Bar
+FooBar,Bar*Foo
+***,\*\*\*
+**,\**
+***,*\*\*\*
+***,\*\*\*\*
+Doesthiscount,Doesthiscount
+caseSensitive,casesensitive
+abc,abcd
+abc,
